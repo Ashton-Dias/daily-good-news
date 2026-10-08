@@ -1,0 +1,20 @@
+// ============================================================================
+// THE ONE PLACE TO CONFIGURE THE APP.  Replace every YOUR_* / example value.
+// The app and widget read these through their Info.plist and entitlements;
+// no Swift code needs editing.
+// ============================================================================
+
+// Your Apple Developer Team ID (10 characters, from developer.apple.com > Membership).
+// Leave blank to build for the simulator without signing.
+DEVELOPMENT_TEAM =
+
+// Bundle ID of the app. The widget uses this + ".widget".
+// Must be unique to you, e.g. com.yourname.dailygoodnews
+APP_BUNDLE_ID = com.example.dailygoodnews
+
+// App Group shared by the app and widget (must start with "group.").
+APP_GROUP_ID = group.com.example.dailygoodnews
+
+// Where the pipeline publishes JSON (GitHub Pages), with trailing slash.
+// "$()" below is deliberate: it stops xcconfig treating "//" as a comment.
+JSON_BASE_URL = https:/$()/YOUR_GITHUB_USER.github.io/YOUR_REPO/

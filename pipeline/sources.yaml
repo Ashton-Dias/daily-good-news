@@ -1,0 +1,11 @@
+# RSS/Atom feeds the daily job reads. Each URL was checked on 2026-10-05
+# (HTTP 200, valid feed, entries present). Add a feed by appending an entry.
+feeds:
+  - name: Good News Network
+    url: https://www.goodnewsnetwork.org/feed/
+  - name: Positive News
+    url: https://www.positive.news/feed/
+  - name: Reasons to be Cheerful
+    url: https://reasonstobecheerful.world/feed/
+  - name: Our World in Data
+    url: https://ourworldindata.org/atom.xml

@@ -21,7 +21,16 @@ enum StoryService {
     // MARK: Network (also refreshes the cache)
 
     static func latest() async throws -> Story { try await fetch(Story.self, file: "latest.json") }
-    static func index() async throws -> [Story] { try await fetch([Story].self, file: "index.json") }
+    /// Newest stories kept for offline use.
+    static let maxArchive = 60
+
+    static func index() async throws -> [Story] {
+        let kept = Array(try await fetch([Story].self, file: "index.json").prefix(maxArchive))
+        if let data = try? JSONEncoder().encode(kept), let url = try? cacheURL("index.json") {
+            try? data.write(to: url, options: .atomic)  // keep only what we show
+        }
+        return kept
+    }
 
     private static func fetch<T: Decodable>(_ type: T.Type, file: String) async throws -> T {
         guard let base = AppConfig.baseURL else { throw StoryServiceError.notConfigured }
@@ -35,7 +44,9 @@ enum StoryService {
     // MARK: Cache
 
     static func cachedLatest() -> Story? { cached(Story.self, file: "latest.json") }
-    static func cachedIndex() -> [Story]? { cached([Story].self, file: "index.json") }
+    static func cachedIndex() -> [Story]? {
+        cached([Story].self, file: "index.json").map { Array($0.prefix(maxArchive)) }
+    }
 
     private static func cached<T: Decodable>(_ type: T.Type, file: String) -> T? {
         guard let url = try? cacheURL(file), let data = try? Data(contentsOf: url) else { return nil }

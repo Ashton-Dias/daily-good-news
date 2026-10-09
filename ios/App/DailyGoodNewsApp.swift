@@ -25,7 +25,7 @@ struct DailyGoodNewsApp: App {
                 }
                 .sheet(item: $openedStory) { story in
                     NavigationStack {
-                        ScrollView { StoryCard(story: story).padding() }
+                        StoryScreen(story: story)
                             .toolbar {
                                 ToolbarItem(placement: .confirmationAction) {
                                     Button("Done") { openedStory = nil }
@@ -33,6 +33,8 @@ struct DailyGoodNewsApp: App {
                             }
                     }
                     .environment(favourites)
+                    .tint(Theme.forest)
+                    .presentationBackground(Theme.background)
                 }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active { Task { await model.refresh() } }

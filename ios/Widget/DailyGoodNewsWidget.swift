@@ -57,6 +57,8 @@ struct DailyGoodNewsWidgetView: View {
     let entry: StoryEntry
     @Environment(\.widgetFamily) private var family
 
+    private var isAccessory: Bool { family == .accessoryRectangular }
+
     var body: some View {
         Group {
             if let story = entry.story {
@@ -65,36 +67,43 @@ struct DailyGoodNewsWidgetView: View {
             } else {
                 Text("Open Daily Good News to load today's story.")
                     .font(.footnote)
-                    .multilineTextAlignment(.leading)
+                    .foregroundStyle(isAccessory ? .primary : Theme.textSecondary)
             }
         }
-        .containerBackground(.fill.tertiary, for: .widget)
+        .containerBackground(for: .widget) {
+            if isAccessory { Color.clear } else { Theme.background }
+        }
     }
 
     @ViewBuilder
     private func content(for story: Story) -> some View {
         switch family {
         case .accessoryRectangular:
+            // Lock screen is monochrome: change type only, not colour.
             VStack(alignment: .leading, spacing: 2) {
-                Text(story.headline).font(.headline).lineLimit(3)
+                Text(story.headline).font(Theme.serif(.headline)).lineLimit(3)
                 Text(story.sourceName).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         case .systemMedium:
-            VStack(alignment: .leading, spacing: 6) {
-                Text(story.category.uppercased()).font(.caption2.bold()).foregroundStyle(.tint)
-                Text(story.headline).font(.headline).lineLimit(3)
-                Text(story.summary).font(.footnote).foregroundStyle(.secondary).lineLimit(3)
+            VStack(alignment: .leading, spacing: 8) {
+                CategoryLabel(category: story.category)
+                Text(story.headline)
+                    .font(Theme.serif(.headline)).foregroundStyle(Theme.textPrimary).lineLimit(3)
+                Text(story.summary)
+                    .font(.footnote).foregroundStyle(Theme.textSecondary).lineLimit(3)
                 Spacer(minLength: 0)
-                Text(story.sourceName).font(.caption2).foregroundStyle(.secondary)
+                Text(story.sourceName).font(.caption2).foregroundStyle(Theme.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         default:
-            VStack(alignment: .leading, spacing: 4) {
-                Text(story.category.uppercased()).font(.system(size: 10, weight: .bold)).foregroundStyle(.tint)
-                Text(story.headline).font(.subheadline.weight(.semibold)).lineLimit(5)
+            VStack(alignment: .leading, spacing: 6) {
+                CategoryLabel(category: story.category)
+                Text(story.headline)
+                    .font(Theme.serif(.subheadline)).foregroundStyle(Theme.textPrimary).lineLimit(5)
                 Spacer(minLength: 0)
-                Text(story.sourceName).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                Text(story.sourceName)
+                    .font(.caption2).foregroundStyle(Theme.textSecondary).lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }

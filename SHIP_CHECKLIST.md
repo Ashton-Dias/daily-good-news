@@ -8,7 +8,7 @@ Tick these in order. Anything marked **(Xcode)** or **(ASC)** = App Store Connec
 - [ ] Settings > Pages > Source: **GitHub Actions**.
 - [ ] Settings > Actions > General > Workflow permissions: **Read and write**.
 - [ ] Run **Actions > Daily story > Run workflow**; confirm `https://<user>.github.io/<repo>/latest.json` loads.
-- [ ] Edit `public/privacy.html`: replace `YOUR_CONTACT_EMAIL`, commit, and confirm
+- [x] Edit `public/privacy.html`: replace `YOUR_CONTACT_EMAIL` (done). Still to do after deploy: commit, and confirm
       `https://<user>.github.io/<repo>/privacy.html` loads. This is your Privacy Policy URL.
 
 ## 2. Config

@@ -10,11 +10,11 @@ DEVELOPMENT_TEAM =
 
 // Bundle ID of the app. The widget uses this + ".widget".
 // Must be unique to you, e.g. com.yourname.dailygoodnews
-APP_BUNDLE_ID = com.example.dailygoodnews
+APP_BUNDLE_ID = com.ashtondias.dailygoodnews
 
 // App Group shared by the app and widget (must start with "group.").
-APP_GROUP_ID = group.com.example.dailygoodnews
+APP_GROUP_ID = group.com.ashtondias.dailygoodnews
 
 // Where the pipeline publishes JSON (GitHub Pages), with trailing slash.
 // "$()" below is deliberate: it stops xcconfig treating "//" as a comment.
-JSON_BASE_URL = https:/$()/YOUR_GITHUB_USER.github.io/YOUR_REPO/
+JSON_BASE_URL = https:/$()/ashton-dias.github.io/daily-good-news/

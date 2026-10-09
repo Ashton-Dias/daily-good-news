@@ -18,7 +18,7 @@ import schema
 import sources
 
 HERE = Path(__file__).resolve().parent
-MAX_TO_LLM = 45
+MAX_TO_LLM = 60
 
 
 def run(args):
@@ -45,13 +45,16 @@ def run(args):
     if args.dry_run:
         for s in scored[:5]:
             flag = "ok  " if s["eligible"] else "skip"
-            print(f"\n[{flag}] {s['overall']:>5}  {s['category']}  ({s['source_name']})")
+            tag = " [teaser]" if s.get("is_teaser") else ""
+            print(f"\n[{flag}] {s['overall']:>5}  {s['category']}  ({s['source_name']}){tag}")
             print(f"       {s['title']}")
             print(f"       {s['url']}")
             print(f"       {s['scores']}  {s['reason']}")
         return
 
-    ranked = [s for s in scored if s["eligible"]]
+    # Free items first; teasers (one-line previews of paid content) only as fallback.
+    ranked = sorted((s for s in scored if s["eligible"]),
+                    key=lambda s: (s.get("is_teaser", False), -s["overall"]))
     if not ranked:
         print(f"Nothing met the bar (best was {scored[0]['overall'] if scored else 'n/a'}); "
               "keeping the current story.")
@@ -60,14 +63,17 @@ def run(args):
     for cand in ranked[:3]:
         try:
             headline, summary = llm.write_copy(client, model, cand)
-            story = schema.validate_story({
+            story = {
                 "date": today,
                 "headline": headline,
                 "summary": summary,
                 "category": cand["category"],
                 "source_name": cand["source_name"],
                 "source_url": cand["url"],
-            })
+            }
+            if cand.get("is_teaser"):
+                story["is_teaser"] = True
+            story = schema.validate_story(story)
         except Exception as e:  # try the next-best candidate
             print(f"skipping '{cand['title']}': {e}", file=sys.stderr)
             continue

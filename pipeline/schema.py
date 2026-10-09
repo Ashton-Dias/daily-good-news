@@ -4,6 +4,7 @@ from datetime import date
 from urllib.parse import urlparse
 
 FIELDS = ("date", "headline", "summary", "category", "source_name", "source_url")
+OPTIONAL_FIELDS = ("is_teaser",)  # only written when true
 CATEGORIES = (
     "Health", "Environment", "Science", "Community", "Technology",
     "Economy", "Education", "Wildlife", "Other",
@@ -21,7 +22,7 @@ def validate_story(story):
     if not isinstance(story, dict):
         raise ValidationError("story must be an object")
     missing = [f for f in FIELDS if f not in story]
-    extra = [k for k in story if k not in FIELDS]
+    extra = [k for k in story if k not in FIELDS + OPTIONAL_FIELDS]
     if missing:
         raise ValidationError(f"missing fields: {', '.join(missing)}")
     if extra:
@@ -30,6 +31,11 @@ def validate_story(story):
         if not isinstance(story[f], str) or not story[f].strip():
             raise ValidationError(f"{f} must be a non-empty string")
     clean = {f: story[f].strip() for f in FIELDS}
+    if "is_teaser" in story:
+        if not isinstance(story["is_teaser"], bool):
+            raise ValidationError("is_teaser must be a boolean")
+        if story["is_teaser"]:
+            clean["is_teaser"] = True
     try:
         date.fromisoformat(clean["date"])
     except ValueError:

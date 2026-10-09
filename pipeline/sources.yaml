@@ -1,6 +1,12 @@
 # RSS/Atom feeds the daily job reads. Each URL was checked on 2026-10-05
 # (HTTP 200, valid feed, entries present). Add a feed by appending an entry.
 feeds:
+  # Listed first so its items survive the cap on candidates sent to the model.
+  # type: fixthenews splits each numbered edition into its top-story items
+  # (and the public "paid subscribers get the rest" teaser topics, if present).
+  - name: Fix The News
+    url: https://substack.fixthenews.com/feed
+    type: fixthenews
   - name: Good News Network
     url: https://www.goodnewsnetwork.org/feed/
   - name: Positive News

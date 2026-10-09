@@ -7,9 +7,12 @@ struct Story: Codable, Identifiable, Hashable {
     let category: String
     let sourceName: String
     let sourceURLString: String
+    /// One-line preview of paid content; absent (nil) on ordinary stories.
+    var isTeaser: Bool? = nil
 
     enum CodingKeys: String, CodingKey {
         case date, headline, summary, category
+        case isTeaser = "is_teaser"
         case sourceName = "source_name"
         case sourceURLString = "source_url"
     }

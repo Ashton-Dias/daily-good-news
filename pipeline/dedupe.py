@@ -9,7 +9,11 @@ TITLE_SIMILARITY = 0.85
 def normalize_url(url):
     p = urlparse(url.strip())
     host = p.netloc.lower().removeprefix("www.")
-    return f"{host}{p.path.rstrip('/')}".lower()
+    key = f"{host}{p.path.rstrip('/')}".lower()
+    # Newsletter items share one post URL; their "#item-..." fragment tells them apart.
+    if p.fragment.startswith("item-"):
+        key += f"#{p.fragment}"
+    return key
 
 
 def normalize_title(title):
